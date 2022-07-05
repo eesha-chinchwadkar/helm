@@ -1,0 +1,22 @@
+env: "localdev"
+
+## Global; used for defining Names
+appName: "{{ .Chart.Name }}"
+relName: "{{ .Release.Name }}"
+uidName: "{{ .Release.Namespace }}"
+
+kind:
+  deployment: dep
+  services: svc
+
+keycloak:
+  #fullname: "{{ .Release.Namespace }}-{{ .Values.kind.deployment }}-keycloak"
+  fullname: ezsql-dep-keycloak
+  ##containerImage: 54.184.180.216:5000/ezsql-webservice:latest
+  containerImage: quay.io/keycloak/keycloak:17.0.0
+  pullPolicy: Always
+  listenPort: 8080
+  nodePort: 30117
+  keycloakAdmin: admin
+  keycloakAdminPassword: admin
+  keycloakProxy: edge

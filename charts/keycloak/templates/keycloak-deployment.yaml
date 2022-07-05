@@ -1,0 +1,41 @@
+{{- with .Values.keycloak }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ tpl .fullname $ }}
+  labels:
+    app: keycloak
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+
+  template:
+    metadata:
+      labels:
+        app: keycloak
+
+    spec:
+      containers:
+      - name: ezsql-keycloak
+        image: {{ .containerImage }}
+        args: ["start-dev"]
+        env:
+        - name: KEYCLOAK_ADMIN
+          value: {{ .keycloakAdmin }}
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: {{ .keycloakAdminPassword }}
+        - name: KC_PROXY
+          value: {{ .keycloakProxy }}
+        ports:
+        - name: http
+          containerPort: {{ .listenPort }}        
+        readinessProbe:
+          httpGet:
+            path: /realms/master
+            port: {{ .listenPort }}
+
+{{- end }}
